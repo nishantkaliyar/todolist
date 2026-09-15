@@ -3,7 +3,7 @@ import 'dotenv/config'
 import { connectDB } from './config/db.js';
 import {router} from './routes/todo.routes.js'
 const app = express();
-const port = process.env.PORT;
+const PORT = process.env.PORT;
 
 
 app.use(express.json())
