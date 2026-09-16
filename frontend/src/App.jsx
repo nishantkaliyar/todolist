@@ -7,7 +7,7 @@ function App() {
   const [editedTodo, seteditedTodo] = useState(null);
   const [editedtext, seteditedtext] = useState("");
 
-  const API_URL = '/api/v1/todos';
+  const API_URL = import.meta.env.VITE_API_URL || '/api/v1/todos'
 
   const fetchTodo = async () => {
     try {
