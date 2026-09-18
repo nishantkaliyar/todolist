@@ -42,14 +42,26 @@ function App() {
 };
 
   const saveEdit = async (id) => {
-    try {
-      const response = await axios.patch(`${API_URL}/${id}`, { text: editedtext }); // Fixed template literal
-      setTodos(todos.map((todo) => (todo._id == id ? response.data : todo)));
-      seteditedTodo(null);
-    } catch (error) {
-      console.error("error updating todo", error);
-    }
-  };
+  const newText = editedtext.trim();
+  if (!newText) return;
+
+  const previousTodos = [...todos];
+
+  // 1. Close edit mode & update UI text instantly
+  seteditedTodo(null);
+  setTodos((prev) =>
+    prev.map((t) => (t._id === id ? { ...t, text: newText } : t))
+  );
+
+  try {
+    // 2. Send background PATCH request
+    await axios.patch(`${API_URL}/${id}`, { text: newText });
+  } catch (error) {
+    console.error("Error updating todo, rolling back:", error);
+    // 3. Rollback to original text on failure
+    setTodos(previousTodos);
+  }
+};
 
   const toggleTodo = async (id) => {
     const previousTodos = [...todos]
