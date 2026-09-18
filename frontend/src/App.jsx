@@ -42,12 +42,17 @@ function App() {
   };
 
   const toggleTodo = async (id) => {
+    const previousTodos = [...todos]
+    setTodos((prev) =>
+    prev.map((t) => (t._id === id ? { ...t, completed: !t.completed } : t))
+  )
     try {
-      const todo = todos.find((t) => t._id == id);
-      const response = await axios.patch(`${API_URL}/${id}`, { completed: !todo.completed }); // Fixed URL & backticks
-      setTodos(todos.map((t) => (t._id == id ? response.data : t))); // Fixed typo: response.data
+      const todo = previousTodos.find((t) => t._id === id);
+      await axios.patch(`${API_URL}/${id}`, { completed: !todo.completed })
     } catch (error) {
       console.error("error toggling todo", error);
+      onsole.error("error toggling todo, rolling back", error);
+      setTodos(previousTodos);
     }
   };
 
@@ -57,12 +62,13 @@ function App() {
   };
 
   const deletedTodo = async (id) => {
+    const previousTodos = [...todos]
+    setTodos((prev) => prev.filter((t) => t._id !== id))
     try {
-      await axios.delete(`${API_URL}/${id}`);
-      setTodos(todos.filter((todo) => todo._id !== id)); // Fixed _id property check
-    } catch (error) {
-      console.error("error deleting todo", error);
-    }
+    await axios.delete(`${API_URL}/${id}`);
+  } catch (error) {
+    setTodos(previousTodos);
+  }
   };
 
   useEffect(() => {
