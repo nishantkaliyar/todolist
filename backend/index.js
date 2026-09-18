@@ -1,4 +1,4 @@
-import express from 'express';
+import express from 'express'
 import 'dotenv/config'
 import cors from 'cors'
 import { connectDB } from './config/db.js';
@@ -7,7 +7,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL || https://todolist-rho-ivory.vercel.app/
+  origin: process.env.FRONTEND_URL || "https://todolist-rho-ivory.vercel.app/",
   credentials: true
 }))
 app.use(express.json())
